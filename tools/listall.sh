@@ -1,9 +1,11 @@
 #!/bin/bash
 
-ALLPACKAGES=`qsearch -aN`
+myquery() {
+    equery meta --maintainer ${1}
+}
 
-for PKG in ${ALLPACKAGES}; do
-MAINTAINER=`equery meta --maintainer ${PKG}`
-#echo "${PKG}:${MAINTAINER}"; done
-echo "${MAINTAINER}"; done
+export -f myquery
 
+> myresults.txt
+
+qsearch -aN | parallel --gnu  --bar myquery {} >> myresults.txt  
